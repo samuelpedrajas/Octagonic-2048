@@ -1,6 +1,6 @@
 extends TileMap
 
-onready var token = preload("res://token.tscn")
+onready var token = preload("res://scenes/token.tscn")
 
 func _next_round():
 	var available_positions = []
