@@ -2,7 +2,7 @@ extends TileMap
 
 onready var token = preload("res://scenes/token.tscn")
 
-func _next_round():
+func _prepare_next_round():
 	var available_positions = []
 	for i in range(global.MATRIX_SIZE):
 		for j in range(global.MATRIX_SIZE):
@@ -14,10 +14,9 @@ func _next_round():
 	add_child(t)
 	t.setup(pos)
 	global.matrix[pos] = t
-	global.moving = false
 
 func _ready():
-	_next_round()
+	_prepare_next_round()
 
 func _get_world_pos(pos):
 	return map_to_world(Vector2(pos.x, pos.y + 3))
@@ -26,7 +25,7 @@ func _diagonal_move(direction):
 	return false
 
 func _perpendicular_move(direction):
-	var moved = false
+	var board_changed = false
 	# MATRIX_SIZE - 1 if the non 0 value of the direction is greater than 0, otherwise => 0
 	var start_index = (global.MATRIX_SIZE - 1) * (direction[0] + direction[1] > 0)  
 	for i in range(0, global.MATRIX_SIZE):
@@ -37,26 +36,28 @@ func _perpendicular_move(direction):
 			#	- we want the rows to move faster ("j" for rows)
 			#
 			# if moving positively:
-			#	- we want "j" to decrease the position
+			#	- we want "i" to decrease the position
 			# elif moving negatively:
-			#	- we want "j" to increase the position
+			#	- we want "i" to increase the position
 			var row = start_index - (i * direction[0] + j * direction[1])
 			var col = start_index - (i * direction[1] + j * direction[0])
 
 			# if there is a token - move it
 			if global.matrix.has(Vector2(row, col)):
-				moved = global.matrix[Vector2(row, col)].move(direction) or moved
+				# if the token taken into consideration was moved or merged with another token
+				# "move" returns true, otherwise it returns false
+				board_changed = global.matrix[Vector2(row, col)].move(direction) or board_changed
 
-	return moved
+	return board_changed
 
 func move_token(direction):
-	var moved = false
+	var board_changed = false
 	if direction.x == 0 or direction.y == 0:
-		moved = _perpendicular_move(direction)
+		board_changed = _perpendicular_move(direction)
 	else:
-		moved = _diagonal_move(direction)
+		board_changed = _diagonal_move(direction)
 
-	if moved:
+	if board_changed:
 		global.tween.start()
 		var expected_runtime = global.tween.get_runtime()
-		global.tween.interpolate_callback(self, expected_runtime, "_next_round")
+		global.tween.interpolate_callback(self, expected_runtime, "_prepare_next_round")

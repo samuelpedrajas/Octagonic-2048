@@ -19,6 +19,7 @@ func _check_move(d):
 		for i in range(-1, 2):
 			for j in range(-1, 2):
 				if i == 0 and j == 0:
+					# origin is not a direction
 					continue
 
 				# create a direction in the plane
@@ -29,13 +30,10 @@ func _check_move(d):
 					emit_signal("user_input", v)
 
 func _input_event(event):
-	if global.moving:
-		return
-
 	if event.is_action_pressed("click"):
 		# if clicked, save the position
 		tap_start_position = event.pos
 	elif event.is_action_released("click"):
-		# if released, erase de position
+		# if released, erase de position and check if we can make a move
 		_check_move(event.pos - tap_start_position)
 		tap_start_position = null
