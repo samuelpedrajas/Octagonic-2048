@@ -1,8 +1,10 @@
 extends Node2D
 
 const ANIMATION_TIME = 0.1
+const MERGE_THRESHOLD = 100
 
 var value setget _change_value
+var token_to_merge = null
 var current_pos
 
 func setup(pos):
@@ -10,68 +12,58 @@ func setup(pos):
 	current_pos = pos
 	set_pos(get_parent()._get_world_pos(pos))
 
-func destroy():
-	global.matrix.erase(current_pos)
-	queue_free()
-
 func _change_value(v):
 	value = v
 	get_node("token_sprite/value").text = str(v)
 
-func _is_valid_pos(p):
-	# checks if the position is inside the bounds of the matrix
-	return p.x >= 0 and p.x < global.MATRIX_SIZE and p.y >= 0 and p.y < global.MATRIX_SIZE
+func _interpolated_move(pos):
+	if token_to_merge:
+		var world_current_pos = get_parent()._get_world_pos(current_pos)
+		var d = (world_current_pos - pos).length()
 
-func _check_merge(direction):
-	var prev_pos = current_pos - direction
+		if d < MERGE_THRESHOLD:
+			token_to_merge.value *= 2
+			token_to_merge = null
+			queue_free()
+			return
 
-	# while is a valid position in the matrix
-	while _is_valid_pos(prev_pos):
-		# if there is a token
-		if global.matrix.has(prev_pos):
-			var prev_token = global.matrix[prev_pos]
-			# if the token has the same value than the current one, merge
-			if prev_token.value == value:
-				prev_token.destroy()
-				self.value = value * 2
-
-				return true  # there is a merge, return true
-	
-			return false  # there is no merge but an obstacle, return false
-		prev_pos -= direction
-
-	return false  # not merged
-
-func _get_destination(direction):
-	var pos = current_pos
-	var next_pos = pos + direction
-
-	while _is_valid_pos(next_pos) and !global.matrix.has(next_pos):
-		pos = next_pos
-		next_pos += direction
-
-	return pos
+	set_pos(pos)
 
 func move(direction):
-	var destination = _get_destination(direction)  # e.g: destination = Vector2(2, 1)
-	var merged = _check_merge(direction)
+	var destination = current_pos
+	var next_pos = current_pos + direction
 
-	# if it cannot be moved, there is no need to make an animation
-	if current_pos == destination:
-		return merged
+	while global.is_valid_pos(next_pos):
+		print("TOKEN: ", current_pos, " destination: ", destination, " next_pos: ", next_pos)
+		if global.matrix.has(next_pos):
+			var token = global.matrix[next_pos]
+			token.move(direction)
+			if token.token_to_merge or token.value != value:
+				destination = token.current_pos - direction
+			else:
+				destination = token.current_pos
+				token_to_merge = token
+			break
+		destination = next_pos
+		next_pos += direction
 
-	# update token position in the matrix
-	global.matrix.erase(current_pos)
-	global.matrix[destination] = self
+	# update token position in the matrix if it's not destroyed
+	if !token_to_merge:
+		global.matrix[destination] = self
 
-	# get the real world position since destination is a position in the matrix
-	var world_pos = get_parent()._get_world_pos(destination)
+	if current_pos != destination:
+		global.matrix.erase(current_pos)
+		
+		# get the real world position since destination is a position in the matrix
+		var world_pos = get_parent()._get_world_pos(destination)
 
-	# interpolate the position using the tweening technique
-	global.tween.interpolate_method(self, "set_pos", get_pos(), world_pos, ANIMATION_TIME,
-									global.tween.TRANS_LINEAR, global.tween.EASE_IN)
+		# interpolate the position using the tweening technique
+		global.tween.interpolate_method(self, "_interpolated_move", get_pos(), world_pos, ANIMATION_TIME,
+										global.tween.TRANS_LINEAR, global.tween.EASE_IN)
 
-	# update the current position
-	current_pos = destination
+		# update the current position
+		current_pos = destination
 
-	return true
+		return true
+
+	return token_to_merge

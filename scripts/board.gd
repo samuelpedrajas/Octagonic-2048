@@ -3,6 +3,7 @@ extends TileMap
 onready var token = preload("res://scenes/token.tscn")
 
 func _prepare_next_round():
+	print(global.matrix)
 	var available_positions = []
 	for i in range(global.MATRIX_SIZE):
 		for j in range(global.MATRIX_SIZE):
@@ -11,6 +12,7 @@ func _prepare_next_round():
 				available_positions.append(pos)
 	var pos = available_positions[randi() % available_positions.size()]
 	var t = token.instance()
+	print("ADDED: ", pos)
 	add_child(t)
 	t.setup(pos)
 	global.matrix[pos] = t
@@ -25,28 +27,31 @@ func _diagonal_move(direction):
 	return false
 
 func _perpendicular_move(direction):
-	var board_changed = false
 	# MATRIX_SIZE - 1 if the non 0 value of the direction is greater than 0, otherwise => 0
-	var start_index = (global.MATRIX_SIZE - 1) * (direction[0] + direction[1] > 0)  
+	var start_index = (global.MATRIX_SIZE - 1) * (direction[0] + direction[1] < 0)
+	var board_changed = false
+
+	# look for the first token in each line
 	for i in range(0, global.MATRIX_SIZE):
 		for j in range(0, global.MATRIX_SIZE):
 			# if moving horizontally:
-			# 	- we want the columns to move faster ("j" for columns)
+			# 	- we want the rows to move faster ("j" for rows)
 			# elif moving vertically:
-			#	- we want the rows to move faster ("j" for rows)
+			#	- we want the columns to move faster ("j" for columns)
 			#
 			# if moving positively:
-			#	- we want "i" to decrease the position
-			# elif moving negatively:
 			#	- we want "i" to increase the position
-			var row = start_index - (i * direction[0] + j * direction[1])
-			var col = start_index - (i * direction[1] + j * direction[0])
+			# elif moving negatively:
+			#	- we want "i" to decrease the position
+			var row = start_index + (i * direction[1] + j * direction[0])
+			var col = start_index + (i * direction[0] + j * direction[1])
 
 			# if there is a token - move it
 			if global.matrix.has(Vector2(row, col)):
 				# if the token taken into consideration was moved or merged with another token
 				# "move" returns true, otherwise it returns false
 				board_changed = global.matrix[Vector2(row, col)].move(direction) or board_changed
+				break
 
 	return board_changed
 
