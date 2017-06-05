@@ -6,6 +6,7 @@ const DIRECTIONS = [
 	Vector2(1, 1), Vector2(-1, -1), # Diagonal: \
 	Vector2(1, -1), Vector2(-1, 1)  # Diagonal: /
 ]
+const DEFAULT_BOARD = "3x3"
 
 # first positions in each direction line
 var direction_pivots = {}
@@ -15,9 +16,10 @@ var matrix = {}
 var tween
 
 # All available boards
-onready var boards = [
-	preload("../scenes/board_4x4.tscn")
-]
+onready var boards = {
+	"3x3": preload("../scenes/board_3x3.tscn"),
+	"4x4": preload("../scenes/board_4x4.tscn")
+}
 
 func _set_direction_pivots():
 	# get all used cells in the current board
@@ -35,16 +37,16 @@ func _set_direction_pivots():
 					direction_pivots[direction] = []
 				direction_pivots[direction].append(cell_pos)
 
-func _prepare_board(i):
+func _prepare_board(board_id):
 	# if we had a previous board, remove it
 	if current_board:
 		current_board.queue_free()
-	current_board = boards[i].instance()  # create a new board
+	current_board = boards[board_id].instance()  # create a new board
 	get_tree().get_root().get_node("game").add_child(current_board)  # add it to the root
 	_set_direction_pivots()  # set its direction pivots
 
 func _ready():
-	_prepare_board(0)  # prepare default board 
+	_prepare_board(DEFAULT_BOARD)  # prepare default board 
 	tween = Tween.new()  # create a tween for token animation
 	add_child(tween)
 
