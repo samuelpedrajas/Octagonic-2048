@@ -35,7 +35,7 @@ func _interpolated_move(pos):
 		# length of the difference between the current position and the destination
 		var d = (world_current_pos - pos).length()
 
-		# if it's close enough -> time increase the other token and to be free
+		# if it's close enough -> time to increase the other token and to be free
 		if d < MERGE_THRESHOLD:
 			token_to_merge_with._increase_value()
 			token_to_merge_with = null
@@ -65,7 +65,7 @@ func move(direction):
 			else:
 				# if the next token did not find any token to be merged with and its
 				# value is the same as the current token value, take the same position
-				# and set token_to_merge_with to merge it near the end of the animation
+				# and set token_to_merge_with to merge it close to the animation end
 				destination = token.current_pos
 				token_to_merge_with = token
 			break
