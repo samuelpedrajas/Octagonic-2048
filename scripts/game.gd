@@ -7,9 +7,6 @@ var tap_start_position
 
 signal user_input
 
-func _ready():
-	connect("user_input", get_node("board"), "move_token")
-
 func _check_move(input_vector):
 	if input_vector.length() > MOTION_DISTANCE:
 		# Don't needed, but could improve performance?

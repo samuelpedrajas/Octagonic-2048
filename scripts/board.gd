@@ -10,6 +10,9 @@ func _get_empty_position():
 		if !global.matrix.has(cell):
 			available_positions.append(cell)
 
+	if available_positions.empty():
+		return null
+
 	randomize()  # otherwise it generates the same numbers
 	return available_positions[randi() % available_positions.size()]
 
@@ -21,10 +24,9 @@ func _spawn_token(pos):
 
 func _prepare_next_round():
 	var pos = _get_empty_position()
-	if pos == null:
-		global.game_over()
-	else:
+	if pos != null:
 		_spawn_token(pos)
+	global.check_moves_available()
 
 func _ready():
 	_prepare_next_round()
