@@ -14,7 +14,7 @@ func setup(pos):
 	value = 2
 	current_pos = pos
 	_set_label()
-	set_pos(get_parent()._get_world_pos(pos))
+	set_pos(get_parent().map_to_world(pos))
 
 func _modulate():
 	var sprite = get_node("token_sprite")
@@ -31,7 +31,7 @@ func _increase_value():
 func _interpolated_move(pos):
 	# if there is a token to merge with...
 	if token_to_merge_with:
-		var world_current_pos = get_parent()._get_world_pos(current_pos)
+		var world_current_pos = get_parent().map_to_world(current_pos)
 		# length of the difference between the current position and the destination
 		var d = (world_current_pos - pos).length()
 
@@ -80,7 +80,7 @@ func move(direction):
 			global.matrix[destination] = self
 		
 		# get the real world position since destination is a position in the matrix
-		var world_pos = get_parent()._get_world_pos(destination)
+		var world_pos = get_parent().map_to_world(destination)
 
 		# interpolate the position using the tweening technique
 		global.tween.interpolate_method(self, "_interpolated_move", get_pos(), world_pos, ANIMATION_TIME,

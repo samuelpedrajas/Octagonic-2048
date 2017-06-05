@@ -1,21 +1,59 @@
 extends Node
 
-const MATRIX_SIZE = 4
+const DIRECTIONS = [
+	Vector2(1, 0), Vector2(-1, 0),  # Horizontal: -
+	Vector2(0, 1), Vector2(0, -1),  # Vertical: |
+	Vector2(1, 1), Vector2(-1, -1), # Diagonal: \
+	Vector2(1, -1), Vector2(-1, 1)  # Diagonal: /
+]
 
+# first positions in each direction line
+var direction_pivots = {}
 var score = 0
+var current_board
 var matrix = {}
 var tween
 
-static func is_valid_pos(p):
-	# checks if the position is inside the bounds of the matrix
-	return p.x >= 0 and p.x < MATRIX_SIZE and p.y >= 0 and p.y < MATRIX_SIZE
+# All available boards
+onready var boards = [
+	preload("../scenes/board_4x4.tscn")
+]
+
+func _set_direction_pivots():
+	# get all used cells in the current board
+	var used_cells = current_board.get_used_cells()
+	direction_pivots.clear()  # clear all the pivots
+
+	# for each used cell, if it has no previous cell but it has a next one
+	# for a given direction, then it is a pivot for that direction
+	for cell_pos in used_cells:
+		for direction in DIRECTIONS:
+			var next_pos = (cell_pos + direction)
+			var prev_pos = (cell_pos - direction)
+			if next_pos in used_cells and !(prev_pos in used_cells):
+				if !direction_pivots.has(direction):
+					direction_pivots[direction] = []
+				direction_pivots[direction].append(cell_pos)
+
+func _prepare_board(i):
+	# if we had a previous board, remove it
+	if current_board:
+		current_board.queue_free()
+	current_board = boards[i].instance()  # create a new board
+	get_tree().get_root().get_node("game").add_child(current_board)  # add it to the root
+	_set_direction_pivots()  # set its direction pivots
+
+func _ready():
+	_prepare_board(0)  # prepare default board 
+	tween = Tween.new()  # create a tween for token animation
+	add_child(tween)
+
+func is_valid_pos(p):
+	# check if the position is inside the board
+	return p in current_board.get_used_cells()
 
 static func game_over():
 	print("GAME OVER!!")
-
-func _ready():
-	tween = Tween.new()
-	add_child(tween)
 
 func increase_points(p):
 	score += p
