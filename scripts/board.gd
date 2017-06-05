@@ -2,20 +2,37 @@ extends TileMap
 
 onready var token = preload("res://scenes/token.tscn")
 
-func _prepare_next_round():
-	print(global.matrix)
+func _get_empty_position():
 	var available_positions = []
+	var pos
+
 	for i in range(global.MATRIX_SIZE):
 		for j in range(global.MATRIX_SIZE):
-			var pos = Vector2(i, j)
+			pos = Vector2(i, j)
 			if !global.matrix.has(pos):
 				available_positions.append(pos)
-	var pos = available_positions[randi() % available_positions.size()]
+
+	if available_positions.empty():
+		return null
+
+	randomize()
+	pos = available_positions[randi() % available_positions.size()]
+
+	return pos
+
+func _spawn_token(pos):
 	var t = token.instance()
-	print("ADDED: ", pos)
+
 	add_child(t)
 	t.setup(pos)
 	global.matrix[pos] = t
+
+func _prepare_next_round():
+	var pos = _get_empty_position()
+	if pos == null:
+		global.game_over()
+	else:
+		_spawn_token(pos)
 
 func _ready():
 	_prepare_next_round()

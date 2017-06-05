@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=5 format=1]
 
 [ext_resource path="res://scripts/game.gd" type="Script" id=1]
 [ext_resource path="res://tileset/tileset.tres" type="TileSet" id=2]
 [ext_resource path="res://scripts/board.gd" type="Script" id=3]
+[ext_resource path="res://fonts/font.fnt" type="BitmapFont" id=4]
 
 [node name="game" type="Control"]
 
@@ -35,5 +36,27 @@ collision/mask = 1
 occluder/light_mask = 1
 tile_data = IntArray( 196608, 0, 196609, 0, 196610, 0, 196611, 0, 262144, 0, 262145, 0, 262146, 0, 262147, 0, 327680, 0, 327681, 0, 327682, 0, 327683, 0, 393216, 0, 393217, 0, 393218, 0, 393219, 0 )
 script/script = ExtResource( 3 )
+
+[node name="score" type="Label" parent="."]
+
+anchor/left = 3
+anchor/top = 3
+anchor/right = 3
+anchor/bottom = 3
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 50.0
+margin/top = 800.0
+margin/right = -50.0
+margin/bottom = 562.0
+custom_fonts/font = ExtResource( 4 )
+text = "0"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
 
