@@ -7,25 +7,35 @@ var value
 var token_to_merge_with = null
 var current_pos
 
-func _set_label(v):
-	get_node("token_sprite/value").text = str(v)
+func _set_label():
+	get_node("token_sprite/value").text = str(value)
 
 func setup(pos):
 	value = 2
-	_set_label(value)
 	current_pos = pos
+	_set_label()
 	set_pos(get_parent()._get_world_pos(pos))
+
+func _modulate():
+	var sprite = get_node("token_sprite")
+	var c = sprite.get_modulate()
+	c = c.linear_interpolate(Color(value / 2048.0, 0, 0), 0.1)
+	sprite.set_modulate(c)
 
 func _increase_value():
 	value *= 2
-	_set_label(value)
+	_modulate()
+	_set_label()
 	global.increase_points(value)
 
 func _interpolated_move(pos):
+	# if there is a token to merge with...
 	if token_to_merge_with:
 		var world_current_pos = get_parent()._get_world_pos(current_pos)
+		# length of the difference between the current position and the destination
 		var d = (world_current_pos - pos).length()
 
+		# if it's close enough -> time increase the other token and to be free
 		if d < MERGE_THRESHOLD:
 			token_to_merge_with._increase_value()
 			token_to_merge_with = null
