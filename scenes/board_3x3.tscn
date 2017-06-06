@@ -5,10 +5,10 @@
 
 [node name="board" type="TileMap"]
 
-transform/pos = Vector2( 156, 0 )
+transform/pos = Vector2( 171, 0 )
 mode = 0
 tile_set = ExtResource( 1 )
-cell/size = Vector2( 256, 256 )
+cell/size = Vector2( 246, 246 )
 cell/quadrant_size = 16
 cell/custom_transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 cell/half_offset = 2
@@ -20,7 +20,7 @@ collision/bounce = 0.0
 collision/layers = 1
 collision/mask = 1
 occluder/light_mask = 1
-tile_data = IntArray( 262144, 0, 262145, 0, 262146, 0, 327680, 0, 327681, 0, 327682, 0, 393216, 0, 393217, 0, 393218, 0 )
+tile_data = IntArray( 196608, 0, 196609, 0, 196610, 0, 262144, 0, 262145, 0, 262146, 0, 327680, 0, 327681, 0, 327682, 0 )
 script/script = ExtResource( 2 )
 
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=1]
 
 [ext_resource path="res://scripts/game.gd" type="Script" id=1]
-[ext_resource path="res://fonts/font.fnt" type="BitmapFont" id=2]
+[ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=2]
 
 [node name="game" type="Control"]
 
@@ -25,11 +25,12 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 1080.0
+margin/left = 540.0
 margin/top = 800.0
-margin/right = -1080.0
+margin/right = -540.0
 margin/bottom = 562.0
 custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
 align = 1
 valign = 1

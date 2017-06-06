@@ -3,13 +3,22 @@ extends Node2D
 const ANIMATION_TIME = 0.1
 const MERGE_THRESHOLD = 20
 const MOVEMENT_OPACITY = 0.2
+const LABEL_SCALE = Vector2(0.9, 0.9)
+const LABEL_OFFSET = Vector2(-5, -5)
 
 var value
 var token_to_merge_with = null
 var current_pos
 
 func _set_label():
-	get_node("token_sprite/value").text = str(value)
+	var n_digits_old = str(value / 2).length()
+	var n_digits_new = str(value).length()
+	var label = get_node("token_sprite/value")
+
+	if n_digits_new != n_digits_old:
+		label.set_scale(label.get_scale() * LABEL_SCALE)
+		label.set_pos(-label.get_size() * label.get_scale() / 2 + LABEL_OFFSET)
+	label.text = str(value)
 
 func _spawn_animation():
 	# play spawn animation
@@ -25,8 +34,7 @@ func setup(pos):
 func _modulate():
 	var sprite = get_node("token_sprite")
 	var c = sprite.get_modulate()
-	c = c.linear_interpolate(Color(value / 2048.0, 0, 0), 0.1)
-	sprite.set_modulate(c)
+	sprite.set_modulate(Color(c.r, c.g * 0.9, c.b * 0.9, 0.5))
 
 func _increase_value():
 	value *= 2

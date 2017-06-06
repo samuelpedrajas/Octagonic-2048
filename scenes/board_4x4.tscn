@@ -5,10 +5,10 @@
 
 [node name="board" type="TileMap"]
 
-transform/pos = Vector2( 28, 0 )
+transform/pos = Vector2( 48, 0 )
 mode = 0
 tile_set = ExtResource( 1 )
-cell/size = Vector2( 256, 256 )
+cell/size = Vector2( 246, 246 )
 cell/quadrant_size = 16
 cell/custom_transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 cell/half_offset = 2
