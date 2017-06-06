@@ -5,19 +5,31 @@ const MERGE_THRESHOLD = 20
 const MOVEMENT_OPACITY = 0.2
 const MERGE_ANIMATION_TIME = 0.05
 const MERGE_SCALE_ANIMATION = Vector2(1.1, 1.1)
+const STARTING_SCALE_ON_SPAWN = Vector2(0, 0)
+const SPAWN_ANIMATION_TIME = 0.1
 
 var value
 var token_to_merge_with = null
 var current_pos
 
 func _set_label():
-	get_node("value").text = str(value)
+	get_node("token_sprite/value").text = str(value)
+
+func _spawn_animation():
+	var s = get_node("token_sprite")
+	var original_scale = s.get_scale()
+
+	s.set_scale(STARTING_SCALE_ON_SPAWN)
+	global.tween.interpolate_method(s, "set_scale", STARTING_SCALE_ON_SPAWN, original_scale, SPAWN_ANIMATION_TIME,
+									global.tween.TRANS_LINEAR, global.tween.EASE_IN)
+	global.tween.start()
 
 func setup(pos):
 	value = 2
 	current_pos = pos
 	_set_label()
 	set_pos(get_parent().map_to_world(pos))
+	_spawn_animation()
 
 func _modulate():
 	var sprite = get_node("token_sprite")
