@@ -1,14 +1,15 @@
 extends Node2D
 
 const ANIMATION_TIME = 0.1
-const MERGE_THRESHOLD = 100
+const MERGE_THRESHOLD = 20
+const MOVEMENT_OPACITY = 0.2
 
 var value
 var token_to_merge_with = null
 var current_pos
 
 func _set_label():
-	get_node("token_sprite/value").text = str(value)
+	get_node("value").text = str(value)
 
 func setup(pos):
 	value = 2
@@ -29,14 +30,17 @@ func _increase_value():
 	global.increase_points(value)
 
 func _interpolated_move(pos):
-	# if there is a token to merge with...
-	if token_to_merge_with:
-		var world_current_pos = get_parent().map_to_world(current_pos)
-		# length of the difference between the current position and the destination
-		var d = (world_current_pos - pos).length()
+	var world_current_pos = get_parent().map_to_world(current_pos)
 
-		# if it's close enough -> time to increase the other token and to be free
-		if d < MERGE_THRESHOLD:
+	# length of the difference between the current position and the destination
+	var d = (world_current_pos - pos).length()
+
+	# if it's close enough -> time to restore the opacity
+	if d < MERGE_THRESHOLD:
+		if get_opacity() < 1:  # must check, otherwise opacity will be set more than once
+			set_opacity(1)
+		# if it's close enough and flagged as merge -> merge it
+		if token_to_merge_with:
 			token_to_merge_with._increase_value()
 			token_to_merge_with = null
 			global.tween.remove(self, "_interpolated_move")
@@ -44,6 +48,15 @@ func _interpolated_move(pos):
 			return
 
 	set_pos(pos)
+
+func _define_tweening():
+	# get the real world position since destination is a position in the matrix
+	var world_pos = get_parent().map_to_world(current_pos)
+
+	# interpolate the position using the tweening technique
+	global.tween.interpolate_method(self, "_interpolated_move", get_pos(), world_pos, ANIMATION_TIME,
+									global.tween.TRANS_LINEAR, global.tween.EASE_IN)
+	set_opacity(MOVEMENT_OPACITY)
 
 func move(direction):
 	var destination = current_pos
@@ -78,15 +91,9 @@ func move(direction):
 		# (otherwise we'll override the token that's gonna be increased)
 		if !token_to_merge_with:
 			global.matrix[destination] = self
-		
-		# get the real world position since destination is a position in the matrix
-		var world_pos = get_parent().map_to_world(destination)
-
-		# interpolate the position using the tweening technique
-		global.tween.interpolate_method(self, "_interpolated_move", get_pos(), world_pos, ANIMATION_TIME,
-										global.tween.TRANS_LINEAR, global.tween.EASE_IN)
 
 		current_pos = destination  # update the current position
+		_define_tweening()
 
 		return true
 
