@@ -3,6 +3,8 @@ extends Node2D
 const ANIMATION_TIME = 0.1
 const MERGE_THRESHOLD = 20
 const MOVEMENT_OPACITY = 0.2
+const MERGE_ANIMATION_TIME = 0.05
+const MERGE_SCALE_ANIMATION = Vector2(1.1, 1.1)
 
 var value
 var token_to_merge_with = null
@@ -53,9 +55,17 @@ func _define_tweening():
 	# get the real world position since destination is a position in the matrix
 	var world_pos = get_parent().map_to_world(current_pos)
 
-	# interpolate the position using the tweening technique
+	# interpolate the position
 	global.tween.interpolate_method(self, "_interpolated_move", get_pos(), world_pos, ANIMATION_TIME,
 									global.tween.TRANS_LINEAR, global.tween.EASE_IN)
+	if token_to_merge_with:
+		# merge animation
+		var token_sprite = token_to_merge_with.get_node("token_sprite")
+		var original_scale = token_sprite.get_scale()
+		global.tween.interpolate_method(token_sprite, "set_scale", original_scale, MERGE_SCALE_ANIMATION, MERGE_ANIMATION_TIME,
+										global.tween.TRANS_LINEAR, global.tween.EASE_IN, ANIMATION_TIME)
+		global.tween.interpolate_method(token_sprite, "set_scale", MERGE_SCALE_ANIMATION, original_scale, MERGE_ANIMATION_TIME,
+										global.tween.TRANS_LINEAR, global.tween.EASE_OUT, ANIMATION_TIME + MERGE_ANIMATION_TIME)
 	set_opacity(MOVEMENT_OPACITY)
 
 func move(direction):
