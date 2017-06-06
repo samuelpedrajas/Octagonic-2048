@@ -3,10 +3,6 @@ extends Node2D
 const ANIMATION_TIME = 0.1
 const MERGE_THRESHOLD = 20
 const MOVEMENT_OPACITY = 0.2
-const MERGE_ANIMATION_TIME = 0.05
-const MERGE_SCALE_ANIMATION = Vector2(1.1, 1.1)
-const STARTING_SCALE_ON_SPAWN = Vector2(0, 0)
-const SPAWN_ANIMATION_TIME = 0.1
 
 var value
 var token_to_merge_with = null
@@ -16,13 +12,8 @@ func _set_label():
 	get_node("token_sprite/value").text = str(value)
 
 func _spawn_animation():
-	var s = get_node("token_sprite")
-	var original_scale = s.get_scale()
-
-	s.set_scale(STARTING_SCALE_ON_SPAWN)
-	global.tween.interpolate_method(s, "set_scale", STARTING_SCALE_ON_SPAWN, original_scale, SPAWN_ANIMATION_TIME,
-									global.tween.TRANS_LINEAR, global.tween.EASE_IN)
-	global.tween.start()
+	# play spawn animation
+	get_node("animation").play("spawn")
 
 func setup(pos):
 	value = 2
@@ -42,6 +33,8 @@ func _increase_value():
 	_modulate()
 	_set_label()
 	global.increase_points(value)
+	# play merge animation
+	get_node("animation").play("merge")
 
 func _interpolated_move(pos):
 	var world_current_pos = get_parent().map_to_world(current_pos)
@@ -70,14 +63,7 @@ func _define_tweening():
 	# interpolate the position
 	global.tween.interpolate_method(self, "_interpolated_move", get_pos(), world_pos, ANIMATION_TIME,
 									global.tween.TRANS_LINEAR, global.tween.EASE_IN)
-	if token_to_merge_with:
-		# merge animation
-		var token_sprite = token_to_merge_with.get_node("token_sprite")
-		var original_scale = token_sprite.get_scale()
-		global.tween.interpolate_method(token_sprite, "set_scale", original_scale, MERGE_SCALE_ANIMATION, MERGE_ANIMATION_TIME,
-										global.tween.TRANS_LINEAR, global.tween.EASE_IN, ANIMATION_TIME)
-		global.tween.interpolate_method(token_sprite, "set_scale", MERGE_SCALE_ANIMATION, original_scale, MERGE_ANIMATION_TIME,
-										global.tween.TRANS_LINEAR, global.tween.EASE_OUT, ANIMATION_TIME + MERGE_ANIMATION_TIME)
+	# decrease opacity for a smoother animation
 	set_opacity(MOVEMENT_OPACITY)
 
 func move(direction):
