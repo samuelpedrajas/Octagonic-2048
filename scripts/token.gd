@@ -77,6 +77,10 @@ func _define_tweening():
 func move(direction):
 	var destination = current_pos
 	var next_pos = current_pos + direction
+	var line_events = {
+		"movement": false,
+		"merge": false
+	}
 
 	# while next_position is inside the board
 	while global.is_valid_pos(next_pos):
@@ -84,8 +88,8 @@ func move(direction):
 		if global.matrix.has(next_pos):
 			var token = global.matrix[next_pos]
 
-			# move the next token first to get its final position after
-			token.move(direction)
+			# move the next token and get if it saw any merge in the line
+			line_events.merge = token.move(direction).merge
 
 			if token.token_to_merge_with or token.value != value:
 				# take the previous position of the next token if it's gonna be merged
@@ -97,11 +101,14 @@ func move(direction):
 				# and set token_to_merge_with to merge it close to the animation end
 				destination = token.current_pos
 				token_to_merge_with = token
+				line_events.merge = true  # there is a merge!
 			break
 		destination = next_pos
 		next_pos += direction
 
-	if current_pos != destination:
+	line_events.movement = current_pos != destination
+
+	if line_events.movement:
 		global.matrix.erase(current_pos)  # the token is not in that position anymore
 		# update the token position in the matrix if it's not gonna be merged
 		# (otherwise we'll override the token that's gonna be increased)
@@ -111,6 +118,4 @@ func move(direction):
 		current_pos = destination  # update the current position
 		_define_tweening()
 
-		return true
-
-	return token_to_merge_with
+	return line_events

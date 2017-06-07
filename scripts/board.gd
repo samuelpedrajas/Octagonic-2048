@@ -32,7 +32,11 @@ func _ready():
 	_prepare_next_round()
 
 func move_token(direction):
-	var board_changed = false
+	# information about the events in the board
+	var board_changed = {
+		"movement": false,  # did the tokens moved?
+		"merge": false  # did any token merged with another one?
+	}
 
 	# for each pivot in this direction
 	for pivot in global.direction_pivots[direction]:
@@ -41,11 +45,18 @@ func move_token(direction):
 		while(global.is_valid_pos(next_pos)):
 			if global.matrix.has(next_pos):
 				# here we found the first token for the given pivot and direction -> move it
-				board_changed = global.matrix[next_pos].move(direction) or board_changed
+				var line_changed = global.matrix[next_pos].move(direction)
+				# update board event information
+				board_changed.movement = board_changed.movement or line_changed.movement
+				board_changed.merge = board_changed.merge or line_changed.merge
 				break
 			next_pos += direction  # no tokens yet -> advance to the next position
 
-	if board_changed:
+	if board_changed.merge:
+		# play merge sound if there was at least one merge in the board
+		get_node("../samples").play("merge")
+
+	if board_changed.movement:
 		global.tween.start()
 		# When the animation of all tokens is finished -> prepare next round
 		global.tween.interpolate_callback(self, global.tween.get_runtime(), "_prepare_next_round")
