@@ -10,10 +10,13 @@ const DEFAULT_BOARD = "3x3"
 
 # first positions in each direction line
 var direction_pivots = {}
-var score = 0
+var score_current = 0 setget _set_current_score
+var score_best = 0
 var current_board
 var matrix = {}
 var tween
+
+signal current_score_changed
 
 # All available boards
 onready var boards = {
@@ -36,13 +39,9 @@ func _set_direction_pivots():
 					direction_pivots[direction] = []
 				direction_pivots[direction].append(cell_pos)
 
-func _reset_points():
-	score = 0
-	get_tree().get_root().get_node("game/score").set_text(str(score))
-
 func _reset_board():
 	tween.remove_all()
-	_reset_points()
+	_set_current_score(0)
 	current_board.queue_free()
 	direction_pivots.clear()  # clear all the pivots
 	matrix.clear()
@@ -80,6 +79,6 @@ func check_moves_available():
 				return
 	_prepare_board(DEFAULT_BOARD)
 
-func increase_points(p):
-	score += p
-	get_tree().get_root().get_node("game/score").set_text(str(score))
+func _set_current_score(s):
+	score_current = s
+	emit_signal("current_score_changed", s)

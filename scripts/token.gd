@@ -40,7 +40,7 @@ func _increase_value():
 	value *= 2
 	_modulate()
 	_set_label()
-	global.increase_points(value)
+	global.score_current += value
 	# play merge animation
 	get_node("animation").play("merge")
 
