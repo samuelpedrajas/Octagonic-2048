@@ -29,11 +29,11 @@ func check_moves_available():
 			var cell_i = used_cells[i]
 			var cell_j = used_cells[j]
 			var v = cell_i - cell_j
-			if abs(v.x) <= 1 and abs(v.y) <= 1 and global.matrix[cell_i].value == global.matrix[cell_j].value:
+			if abs(v.x) <= 1 and abs(v.y) <= 1 and matrix[cell_i].value == matrix[cell_j].value:
 				return
 
 	# TODO: GAME OVER HERE RATHER THAN PREPARING THE DEFAULT BOARD HERE
-	_prepare_board(config.DEFAULT_BOARD)
+	prepare_board(global.current_challenge)
 
 func _set_direction_pivots():
 	# get all used cells in the current board
@@ -52,7 +52,7 @@ func _set_direction_pivots():
 
 func _reset_board():
 	tween.remove_all()
-	global.score = 0
+	global.score_current = 0
 	current_board.queue_free()
 	direction_pivots.clear()  # clear all the pivots
 	matrix.clear()
@@ -91,7 +91,6 @@ func _spawn_token(pos):
 
 func _prepare_next_round():
 	var pos = _get_empty_position()
-	print(pos)
 	if pos != null:
 		_spawn_token(pos)
 	check_moves_available()
