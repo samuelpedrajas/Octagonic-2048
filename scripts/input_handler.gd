@@ -1,20 +1,17 @@
 extends Control
 
-const MOTION_DISTANCE = 40  # Minimum distance with the mouse pressed to make a move
-const MINIMUM_DISTANCE_TO_MOVE = 0.55  # Minimum distance from the 8 direction vectors to make a move
-
 var tap_start_position
 
 signal user_input
 
 func _check_move(input_vector):
-	if input_vector.length() > MOTION_DISTANCE:
+	if input_vector.length() > config.MOTION_DISTANCE:
 		# Don't needed, but could improve performance?
 		input_vector = input_vector.normalized()
 
-		for direction in global.DIRECTIONS:
+		for direction in config.DIRECTIONS:
 			# if the distance is smaller than the threshold, try to make a move
-			if (direction - input_vector).length() < MINIMUM_DISTANCE_TO_MOVE:
+			if (direction - input_vector).length() < config.MINIMUM_DISTANCE_TO_MOVE:
 				emit_signal("user_input", direction)
 
 func _input_event(event):
