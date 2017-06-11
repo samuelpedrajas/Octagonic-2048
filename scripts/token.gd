@@ -30,7 +30,7 @@ func setup(pos, t):
 func _modulate():
 	var sprite = get_node("token_sprite")
 	var c = sprite.get_modulate()
-	sprite.set_modulate(Color(c.r, c.g * 0.9, c.b * 0.9, 0.5))
+	sprite.set_modulate(Color(c.r, c.g * 0.9, c.b * 0.9, c.a))
 
 func _increase_value():
 	value *= 2
