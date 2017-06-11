@@ -5,6 +5,11 @@ var token_to_merge_with = null
 var current_pos
 var tween
 
+signal value_changed
+
+func _ready():
+	connect("value_changed", global, "handle_token_increased", [], CONNECT_DEFERRED)
+
 func _set_label():
 	var n_digits_old = str(value / 2).length()
 	var n_digits_new = str(value).length()
@@ -30,13 +35,13 @@ func setup(pos, t):
 func _modulate():
 	var sprite = get_node("token_sprite")
 	var c = sprite.get_modulate()
-	sprite.set_modulate(Color(c.r, c.g * 0.9, c.b * 0.9, c.a))
+	sprite.set_modulate(c.linear_interpolate(config.MODULATION_ON_MERGE, config.LINEAR_INTERPOLATION_SCALAR))
 
 func _increase_value():
 	value *= 2
+	emit_signal("value_changed", value)
 	_modulate()
 	_set_label()
-	global.score_current += value
 	# play merge animation
 	get_node("animation").play("merge")
 
