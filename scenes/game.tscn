@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://scripts/stage.gd" type="Script" id=1]
 [ext_resource path="res://audio/merge.smp" type="Sample" id=2]
@@ -23,6 +23,17 @@ script/source = "extends Label
 
 func _ready():
 	global.connect(\"current_score_changed\", self, \"_update_score\")
+
+func _update_score(s):
+	set_text(str(s))
+"
+
+[sub_resource type="GDScript" id=3]
+
+script/source = "extends Label
+
+func _ready():
+	global.connect(\"current_max_changed\", self, \"_update_score\")
 
 func _update_score(s):
 	set_text(str(s))
@@ -72,7 +83,7 @@ offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
-[node name="score" type="Label" parent="hud"]
+[node name="score_current" type="Label" parent="hud"]
 
 anchor/left = 3
 anchor/top = 3
@@ -84,7 +95,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 540.0
 margin/top = 800.0
-margin/right = -540.0
+margin/right = -50.0
 margin/bottom = 562.0
 custom_fonts/font = ExtResource( 5 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
@@ -95,6 +106,30 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script/script = SubResource( 2 )
+
+[node name="max_current" type="Label" parent="hud"]
+
+anchor/left = 3
+anchor/top = 3
+anchor/right = 3
+anchor/bottom = 3
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 50.0
+margin/top = 800.0
+margin/right = -540.0
+margin/bottom = 562.0
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
+text = "0"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script/script = SubResource( 3 )
 
 [node name="input_handler" type="Control" parent="."]
 
