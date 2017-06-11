@@ -5,9 +5,10 @@
 [node name="board" type="TileMap"]
 
 transform/pos = Vector2( 48, 0 )
+transform/scale = Vector2( 0.5, 0.5 )
 mode = 0
 tile_set = ExtResource( 1 )
-cell/size = Vector2( 123, 123 )
+cell/size = Vector2( 246, 246 )
 cell/quadrant_size = 16
 cell/custom_transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 cell/half_offset = 2
@@ -19,6 +20,6 @@ collision/bounce = 0.0
 collision/layers = 1
 collision/mask = 1
 occluder/light_mask = 1
-tile_data = IntArray( 524291, 1, 524292, 1, 589826, 1, 589827, 1, 589828, 1, 589829, 1, 655361, 1, 655362, 1, 655363, 1, 655364, 1, 655365, 1, 655366, 1, 720897, 1, 720898, 1, 720899, 1, 720900, 1, 720901, 1, 720902, 1, 786434, 1, 786435, 1, 786436, 1, 786437, 1, 851971, 1, 851972, 1 )
+tile_data = IntArray( 393219, 0, 393220, 0, 458754, 0, 458755, 0, 458756, 0, 458757, 0, 524289, 0, 524290, 0, 524291, 0, 524292, 0, 524293, 0, 524294, 0, 589825, 0, 589826, 0, 589827, 0, 589828, 0, 589829, 0, 589830, 0, 655362, 0, 655363, 0, 655364, 0, 655365, 0, 720899, 0, 720900, 0 )
 
 
