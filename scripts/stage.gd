@@ -12,6 +12,7 @@ onready var token = preload("res://scenes/token.tscn")
 
 func _ready():
 	input_handler = get_node("input_handler")
+	input_handler.connect("user_input", self, "move")
 	tween = get_node("tween")
 
 func is_valid_pos(p):
@@ -51,22 +52,27 @@ func _set_direction_pivots():
 				direction_pivots[direction].append(cell_pos)
 
 func _reset_board():
+	# remove all tokens from the tween
 	tween.remove_all()
+	# restart score
 	global.score_current = 0
+	# free current board
 	current_board.queue_free()
-	direction_pivots.clear()  # clear all the pivots
+	# clear direction pivots since they'll be different between boards
+	direction_pivots.clear()
+	# clear the matrix
 	matrix.clear()
 
 func prepare_board(challenge):
-	var packed_scene_board = load(challenge.board)
-	# if we had a previous board, remove it
+	# get the packed scene scecified in the challenge
+	var board_packed_scene = load(challenge.board)
+	# if we had a previous board, reset it
 	if current_board:
 		_reset_board()
 	
-	current_board = packed_scene_board.instance()  # create a new board
-	add_child(current_board)  # add it to the root
+	current_board = board_packed_scene.instance()  # create a new board
+	add_child(current_board)
 	_set_direction_pivots()  # set its direction pivots
-	input_handler.connect("user_input", self, "move")
 	_prepare_next_round()
 
 func _get_empty_position():
@@ -105,7 +111,7 @@ func move(direction):
 	# for each pivot in this direction
 	for pivot in direction_pivots[direction]:
 		var line_changes = _move_line(pivot, direction)
-
+		# update board information
 		board_changed.movement = board_changed.movement or line_changes.movement
 		board_changed.merge = board_changed.merge or line_changes.merge
 
@@ -125,20 +131,22 @@ func _move_line(position, direction):
 		"last_token": null,
 		"last_valid_position": null
 	}
+	# 3 cases: current position has a token, current position is not valid and current position is
+	# valid but it doesn't have a token
 	if matrix.has(position):
 		var current_token = matrix[position]
 		var changes = _move_line(position + direction, direction)
 		var last_token = changes.last_token
 		var token_destination = changes.last_valid_position
-
+		# conditions for positioning and merging
 		if last_token and (last_token.token_to_merge_with or last_token.value != current_token.value):
 			token_destination -= direction
 		elif last_token and !last_token.token_to_merge_with and last_token.value == current_token.value:
 			line_changes.merge = true
 			current_token.token_to_merge_with = last_token
-
+		# move current token after moving the ones after it
 		_move_token(current_token, token_destination)
-
+		# update line_changes information for the previous position in the recursion
 		line_changes.movement = position != token_destination
 		line_changes.merge = line_changes.merge or changes.merge
 		line_changes.last_token = current_token
