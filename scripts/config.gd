@@ -12,7 +12,7 @@ const ANIMATION_TIME = 0.1  # time to travel to the destination, in seconds
 const MERGE_THRESHOLD = 20  # in pixels, distance to the destination to perform a merge
 const MOVEMENT_OPACITY = 0.2  # opacity when moving
 const LABEL_SCALE = Vector2(0.9, 0.9)  # scale factor when the number of digits are increased
-const LABEL_OFFSET = Vector2(-5, -5)  # offset to center the label
+const LABEL_OFFSET = Vector2(-5, -5)  # offset to center the label -> TODO: refactor at some point
 
 const MOTION_DISTANCE = 40  # Minimum distance with the mouse pressed to make a move
 const MINIMUM_DISTANCE_TO_MOVE = 0.55  # Minimum distance from the 8 direction vectors to make a move
