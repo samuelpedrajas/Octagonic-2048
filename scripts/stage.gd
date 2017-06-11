@@ -34,7 +34,7 @@ func check_moves_available():
 				return
 
 	# TODO: GAME OVER HERE RATHER THAN PREPARING THE DEFAULT BOARD HERE
-	prepare_board(global.current_challenge)
+	global.game_over()
 
 func _set_direction_pivots():
 	# get all used cells in the current board
@@ -54,8 +54,6 @@ func _set_direction_pivots():
 func _reset_board():
 	# remove all tokens from the tween
 	tween.remove_all()
-	# restart score
-	global.score_current = 0
 	# free current board
 	current_board.queue_free()
 	# clear direction pivots since they'll be different between boards
@@ -69,7 +67,7 @@ func prepare_board(challenge):
 	# if we had a previous board, reset it
 	if current_board:
 		_reset_board()
-	
+
 	current_board = board_packed_scene.instance()  # create a new board
 	add_child(current_board)
 	_set_direction_pivots()  # set its direction pivots
