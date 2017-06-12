@@ -1,19 +1,18 @@
-[gd_scene load_steps=20 format=1]
+[gd_scene load_steps=19 format=1]
 
 [ext_resource path="res://scripts/stage.gd" type="Script" id=1]
 [ext_resource path="res://audio/merge.smp" type="Sample" id=2]
-[ext_resource path="res://audio/Laser_Groove.ogg" type="AudioStream" id=3]
-[ext_resource path="res://images/background.tex" type="Texture" id=4]
-[ext_resource path="res://fonts/title.fnt" type="BitmapFont" id=5]
-[ext_resource path="res://images/leaderboard.tex" type="Texture" id=6]
-[ext_resource path="res://images/audio_on.tex" type="Texture" id=7]
-[ext_resource path="res://images/settings.tex" type="Texture" id=8]
-[ext_resource path="res://images/restart.tex" type="Texture" id=9]
-[ext_resource path="res://images/undo.tex" type="Texture" id=10]
-[ext_resource path="res://images/brush.tex" type="Texture" id=11]
-[ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=12]
-[ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=13]
-[ext_resource path="res://scripts/input_handler.gd" type="Script" id=14]
+[ext_resource path="res://images/background.tex" type="Texture" id=3]
+[ext_resource path="res://fonts/title.fnt" type="BitmapFont" id=4]
+[ext_resource path="res://images/leaderboard.tex" type="Texture" id=5]
+[ext_resource path="res://images/audio_on.tex" type="Texture" id=6]
+[ext_resource path="res://images/settings.tex" type="Texture" id=7]
+[ext_resource path="res://images/restart.tex" type="Texture" id=8]
+[ext_resource path="res://images/undo.tex" type="Texture" id=9]
+[ext_resource path="res://images/brush.tex" type="Texture" id=10]
+[ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=11]
+[ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=12]
+[ext_resource path="res://scripts/input_handler.gd" type="Script" id=13]
 
 [sub_resource type="SampleLibrary" id=1]
 
@@ -25,7 +24,7 @@ samples/merge = {
 "sample": ExtResource( 2 )
 }
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=2]
 
 script/source = "extends Label
 
@@ -36,7 +35,7 @@ func _update_title(s):
 	set_text(s)
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 
 script/source = "extends Label
 
@@ -58,7 +57,7 @@ func _update_score(s):
 	set_text(str(s))
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=5]
 
 script/source = "extends Label
 
@@ -92,22 +91,23 @@ default/chorus_send = 0.0
 
 [node name="music" type="StreamPlayer" parent="."]
 
-stream/stream = ExtResource( 3 )
+stream/stream = null
 stream/play = false
 stream/loop = true
 stream/volume_db = -6.0
-stream/autoplay = false
+stream/autoplay = true
 stream/paused = false
 stream/loop_restart_time = 0.0
 stream/buffering_ms = 500
 
 [node name="background" type="Sprite" parent="."]
 
-texture = ExtResource( 4 )
+texture = ExtResource( 3 )
 centered = false
 
 [node name="hud" type="CanvasLayer" parent="."]
 
+editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -123,14 +123,14 @@ margin/left = 0.0
 margin/top = 200.0
 margin/right = 1080.0
 margin/bottom = 293.0
-custom_fonts/font = ExtResource( 5 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Challenge 0"
 align = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-script/script = SubResource( 5 )
+script/script = SubResource( 2 )
 
 [node name="upper_buttons" type="Container" parent="hud"]
 
@@ -147,17 +147,17 @@ margin/bottom = 158.0
 [node name="leaderboard" type="Sprite" parent="hud/upper_buttons"]
 
 transform/pos = Vector2( 100, 64 )
-texture = ExtResource( 6 )
+texture = ExtResource( 5 )
 
 [node name="sound" type="Sprite" parent="hud/upper_buttons"]
 
 transform/pos = Vector2( 802, 64 )
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 
 [node name="settings" type="Sprite" parent="hud/upper_buttons"]
 
 transform/pos = Vector2( 980, 64 )
-texture = ExtResource( 8 )
+texture = ExtResource( 7 )
 
 [node name="lower_buttons" type="Container" parent="hud"]
 
@@ -174,17 +174,17 @@ margin/bottom = 1678.0
 [node name="restart" type="Sprite" parent="hud/lower_buttons"]
 
 transform/pos = Vector2( 292, 64 )
-texture = ExtResource( 9 )
+texture = ExtResource( 8 )
 
 [node name="undo" type="Sprite" parent="hud/lower_buttons"]
 
 transform/pos = Vector2( 540, 64 )
-texture = ExtResource( 10 )
+texture = ExtResource( 9 )
 
 [node name="brush" type="Sprite" parent="hud/lower_buttons"]
 
 transform/pos = Vector2( 808, 64 )
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 
 [node name="scoring" type="Container" parent="hud"]
 
@@ -212,7 +212,7 @@ margin/left = 20.0
 margin/top = -330.0
 margin/right = -520.0
 margin/bottom = -568.0
-custom_fonts/font = ExtResource( 12 )
+custom_fonts/font = ExtResource( 11 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
 align = 1
@@ -220,7 +220,7 @@ valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-script/script = SubResource( 2 )
+script/script = SubResource( 3 )
 
 [node name="goal_frame" type="ColorFrame" parent="hud/scoring"]
 
@@ -245,7 +245,7 @@ margin/left = 0.0
 margin/top = -60.0
 margin/right = 450.0
 margin/bottom = -16.0
-custom_fonts/font = ExtResource( 13 )
+custom_fonts/font = ExtResource( 12 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Goal"
 align = 1
@@ -267,7 +267,7 @@ margin/left = 225.0
 margin/top = 75.0
 margin/right = -225.0
 margin/bottom = -75.0
-custom_fonts/font = ExtResource( 5 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "0"
 align = 1
@@ -299,7 +299,7 @@ margin/left = 0.0
 margin/top = -60.0
 margin/right = 450.0
 margin/bottom = -16.0
-custom_fonts/font = ExtResource( 13 )
+custom_fonts/font = ExtResource( 12 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Current Max"
 align = 1
@@ -321,7 +321,7 @@ margin/left = 225.0
 margin/top = 75.0
 margin/right = -225.0
 margin/bottom = -75.0
-custom_fonts/font = ExtResource( 12 )
+custom_fonts/font = ExtResource( 11 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
 align = 1
@@ -329,7 +329,7 @@ valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-script/script = SubResource( 3 )
+script/script = SubResource( 5 )
 
 [node name="input_handler" type="Control" parent="."]
 
@@ -341,7 +341,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 1080.0
 margin/bottom = 1920.0
-script/script = ExtResource( 14 )
+script/script = ExtResource( 13 )
 
 [node name="tween" type="Tween" parent="."]
 
