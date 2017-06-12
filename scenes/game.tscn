@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=1]
+[gd_scene load_steps=20 format=1]
 
 [ext_resource path="res://scripts/stage.gd" type="Script" id=1]
 [ext_resource path="res://audio/merge.smp" type="Sample" id=2]
@@ -14,13 +14,12 @@
 [ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=12]
 [ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=13]
 [ext_resource path="res://scripts/input_handler.gd" type="Script" id=14]
-[ext_resource path="res://scenes/board_3x3.tscn" type="PackedScene" id=15]
 
 [sub_resource type="SampleLibrary" id=1]
 
 resource/name = "merge"
 samples/merge = {
-"db": 0.0,
+"db": 1.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 2 )
@@ -78,16 +77,16 @@ script/script = ExtResource( 1 )
 
 config/polyphony = 1
 config/samples = SubResource( 1 )
-default/volume_db = 0.0
+default/volume_db = 1.0
 default/pitch_scale = 1.0
 default/pan = 0.0
 default/depth = 0.0
 default/height = 0.0
-default/filter/type = 0
+default/filter/type = 6
 default/filter/cutoff = 5000.0
 default/filter/resonance = 1.0
 default/filter/gain = 1.0
-default/reverb_room = 2
+default/reverb_room = 0
 default/reverb_send = 0.0
 default/chorus_send = 0.0
 
@@ -280,7 +279,6 @@ script/script = SubResource( 4 )
 
 [node name="max_current_frame" type="ColorFrame" parent="hud/scoring"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -303,7 +301,7 @@ margin/right = 450.0
 margin/bottom = -16.0
 custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "Max Current"
+text = "Current Max"
 align = 1
 percent_visible = 1.0
 lines_skipped = 0
@@ -351,7 +349,5 @@ playback/process_mode = 1
 playback/active = false
 playback/repeat = false
 playback/speed = 1.0
-
-[node name="board" parent="." instance=ExtResource( 15 )]
 
 
