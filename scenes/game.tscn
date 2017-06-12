@@ -1,11 +1,13 @@
-[gd_scene load_steps=11 format=1]
+[gd_scene load_steps=13 format=1]
 
 [ext_resource path="res://scripts/stage.gd" type="Script" id=1]
 [ext_resource path="res://audio/merge.smp" type="Sample" id=2]
 [ext_resource path="res://audio/Laser_Groove.ogg" type="AudioStream" id=3]
 [ext_resource path="res://images/background.tex" type="Texture" id=4]
 [ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=5]
-[ext_resource path="res://scripts/input_handler.gd" type="Script" id=6]
+[ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=6]
+[ext_resource path="res://scripts/input_handler.gd" type="Script" id=7]
+[ext_resource path="res://scenes/board_3x3.tscn" type="PackedScene" id=8]
 
 [sub_resource type="SampleLibrary" id=1]
 
@@ -28,23 +30,23 @@ func _update_score(s):
 	set_text(str(s))
 "
 
-[sub_resource type="GDScript" id=3]
-
-script/source = "extends Label
-
-func _ready():
-	global.connect(\"current_max_changed\", self, \"_update_score\")
-
-func _update_score(s):
-	set_text(str(s))
-"
-
 [sub_resource type="GDScript" id=4]
 
 script/source = "extends Label
 
 func _ready():
 	global.connect(\"current_goal_changed\", self, \"_update_score\")
+
+func _update_score(s):
+	set_text(str(s))
+"
+
+[sub_resource type="GDScript" id=3]
+
+script/source = "extends Label
+
+func _ready():
+	global.connect(\"current_max_changed\", self, \"_update_score\")
 
 func _update_score(s):
 	set_text(str(s))
@@ -94,8 +96,20 @@ offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
-[node name="score_current" type="Label" parent="hud"]
+[node name="scoring" type="Container" parent="hud"]
 
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+
+[node name="score_current" type="Label" parent="hud/scoring"]
+
+visibility/visible = false
 anchor/left = 3
 anchor/top = 3
 anchor/right = 3
@@ -104,10 +118,10 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 540.0
-margin/top = 610.0
-margin/right = 0.0
-margin/bottom = 372.0
+margin/left = 20.0
+margin/top = -330.0
+margin/right = -520.0
+margin/bottom = -568.0
 custom_fonts/font = ExtResource( 5 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
@@ -118,31 +132,38 @@ lines_skipped = 0
 max_lines_visible = -1
 script/script = SubResource( 2 )
 
-[node name="max_current" type="Label" parent="hud"]
+[node name="goal_frame" type="ColorFrame" parent="hud/scoring"]
 
-anchor/left = 3
-anchor/top = 3
-anchor/right = 3
-anchor/bottom = 3
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 70.0
+margin/top = 380.0
+margin/right = 520.0
+margin/bottom = 530.0
+color = Color( 0.494118, 0.494118, 0.494118, 0.5 )
+
+[node name="goal_label" type="Label" parent="hud/scoring/goal_frame"]
+
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
-margin/top = 610.0
-margin/right = -540.0
-margin/bottom = 372.0
-custom_fonts/font = ExtResource( 5 )
-custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
-text = "0"
+margin/top = -60.0
+margin/right = 450.0
+margin/bottom = -16.0
+custom_fonts/font = ExtResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Goal"
 align = 1
-valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-script/script = SubResource( 3 )
 
-[node name="goal" type="Label" parent="hud"]
+[node name="goal" type="Label" parent="hud/scoring/goal_frame"]
 
 anchor/left = 3
 anchor/top = 3
@@ -152,10 +173,10 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 540.0
-margin/top = 800.0
-margin/right = -540.0
-margin/bottom = 562.0
+margin/left = 225.0
+margin/top = 75.0
+margin/right = -225.0
+margin/bottom = -75.0
 custom_fonts/font = ExtResource( 5 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
@@ -165,6 +186,61 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script/script = SubResource( 4 )
+
+[node name="max_current_frame" type="ColorFrame" parent="hud/scoring"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 560.0
+margin/top = 380.0
+margin/right = 1010.0
+margin/bottom = 530.0
+color = Color( 0.494118, 0.494118, 0.494118, 0.5 )
+
+[node name="max_current_label" type="Label" parent="hud/scoring/max_current_frame"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = -60.0
+margin/right = 450.0
+margin/bottom = -16.0
+custom_fonts/font = ExtResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Max Current"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="max_current" type="Label" parent="hud/scoring/max_current_frame"]
+
+anchor/left = 3
+anchor/top = 3
+anchor/right = 3
+anchor/bottom = 3
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 225.0
+margin/top = 75.0
+margin/right = -225.0
+margin/bottom = -75.0
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
+text = "0"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script/script = SubResource( 3 )
 
 [node name="input_handler" type="Control" parent="."]
 
@@ -176,7 +252,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 1080.0
 margin/bottom = 1920.0
-script/script = ExtResource( 6 )
+script/script = ExtResource( 7 )
 
 [node name="tween" type="Tween" parent="."]
 
@@ -184,5 +260,7 @@ playback/process_mode = 1
 playback/active = false
 playback/repeat = false
 playback/speed = 1.0
+
+[node name="board" parent="." instance=ExtResource( 8 )]
 
 

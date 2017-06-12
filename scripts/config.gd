@@ -30,6 +30,11 @@ const CHALLENGES = [
 		"name": "Challenge 1",
 		"goal": 1024,
 		"board": "res://scenes/board_4x4.tscn"
+	},
+	{
+		"name": "Challenge 2",
+		"goal": 1024,
+		"board": "res://scenes/board_octagon.tscn"
 	}
 ]
 const DEFAULT_CHALLENGE = 0
