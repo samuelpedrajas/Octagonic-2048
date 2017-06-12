@@ -1,13 +1,20 @@
-[gd_scene load_steps=13 format=1]
+[gd_scene load_steps=20 format=1]
 
 [ext_resource path="res://scripts/stage.gd" type="Script" id=1]
 [ext_resource path="res://audio/merge.smp" type="Sample" id=2]
 [ext_resource path="res://audio/Laser_Groove.ogg" type="AudioStream" id=3]
 [ext_resource path="res://images/background.tex" type="Texture" id=4]
-[ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=5]
-[ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=6]
-[ext_resource path="res://scripts/input_handler.gd" type="Script" id=7]
-[ext_resource path="res://scenes/board_3x3.tscn" type="PackedScene" id=8]
+[ext_resource path="res://fonts/title.fnt" type="BitmapFont" id=5]
+[ext_resource path="res://images/leaderboard.tex" type="Texture" id=6]
+[ext_resource path="res://images/audio_on.tex" type="Texture" id=7]
+[ext_resource path="res://images/settings.tex" type="Texture" id=8]
+[ext_resource path="res://images/restart.tex" type="Texture" id=9]
+[ext_resource path="res://images/undo.tex" type="Texture" id=10]
+[ext_resource path="res://images/brush.tex" type="Texture" id=11]
+[ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=12]
+[ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=13]
+[ext_resource path="res://scripts/input_handler.gd" type="Script" id=14]
+[ext_resource path="res://scenes/board_3x3.tscn" type="PackedScene" id=15]
 
 [sub_resource type="SampleLibrary" id=1]
 
@@ -96,8 +103,80 @@ offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
+[node name="title" type="Label" parent="hud"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 200.0
+margin/right = 1080.0
+margin/bottom = 293.0
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Challenge 0"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="upper_buttons" type="Container" parent="hud"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 30.0
+margin/right = 1080.0
+margin/bottom = 158.0
+
+[node name="leaderboard" type="Sprite" parent="hud/upper_buttons"]
+
+transform/pos = Vector2( 100, 64 )
+texture = ExtResource( 6 )
+
+[node name="sound" type="Sprite" parent="hud/upper_buttons"]
+
+transform/pos = Vector2( 802, 64 )
+texture = ExtResource( 7 )
+
+[node name="settings" type="Sprite" parent="hud/upper_buttons"]
+
+transform/pos = Vector2( 980, 64 )
+texture = ExtResource( 8 )
+
+[node name="lower_buttons" type="Container" parent="hud"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 1550.0
+margin/right = 1080.0
+margin/bottom = 1678.0
+
+[node name="restart" type="Sprite" parent="hud/lower_buttons"]
+
+transform/pos = Vector2( 292, 64 )
+texture = ExtResource( 9 )
+
+[node name="undo" type="Sprite" parent="hud/lower_buttons"]
+
+transform/pos = Vector2( 540, 64 )
+texture = ExtResource( 10 )
+
+[node name="brush" type="Sprite" parent="hud/lower_buttons"]
+
+transform/pos = Vector2( 808, 64 )
+texture = ExtResource( 11 )
+
 [node name="scoring" type="Container" parent="hud"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -122,7 +201,7 @@ margin/left = 20.0
 margin/top = -330.0
 margin/right = -520.0
 margin/bottom = -568.0
-custom_fonts/font = ExtResource( 5 )
+custom_fonts/font = ExtResource( 12 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
 align = 1
@@ -155,7 +234,7 @@ margin/left = 0.0
 margin/top = -60.0
 margin/right = 450.0
 margin/bottom = -16.0
-custom_fonts/font = ExtResource( 6 )
+custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Goal"
 align = 1
@@ -178,7 +257,7 @@ margin/top = 75.0
 margin/right = -225.0
 margin/bottom = -75.0
 custom_fonts/font = ExtResource( 5 )
-custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "0"
 align = 1
 valign = 1
@@ -210,7 +289,7 @@ margin/left = 0.0
 margin/top = -60.0
 margin/right = 450.0
 margin/bottom = -16.0
-custom_fonts/font = ExtResource( 6 )
+custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Max Current"
 align = 1
@@ -232,7 +311,7 @@ margin/left = 225.0
 margin/top = 75.0
 margin/right = -225.0
 margin/bottom = -75.0
-custom_fonts/font = ExtResource( 5 )
+custom_fonts/font = ExtResource( 12 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
 align = 1
@@ -252,7 +331,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 1080.0
 margin/bottom = 1920.0
-script/script = ExtResource( 7 )
+script/script = ExtResource( 14 )
 
 [node name="tween" type="Tween" parent="."]
 
@@ -261,6 +340,6 @@ playback/active = false
 playback/repeat = false
 playback/speed = 1.0
 
-[node name="board" parent="." instance=ExtResource( 8 )]
+[node name="board" parent="." instance=ExtResource( 15 )]
 
 
