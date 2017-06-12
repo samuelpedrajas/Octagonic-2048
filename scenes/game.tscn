@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=1]
+[gd_scene load_steps=21 format=1]
 
 [ext_resource path="res://scripts/stage.gd" type="Script" id=1]
 [ext_resource path="res://audio/merge.smp" type="Sample" id=2]
@@ -25,6 +25,17 @@ samples/merge = {
 "priority": 0,
 "sample": ExtResource( 2 )
 }
+
+[sub_resource type="GDScript" id=5]
+
+script/source = "extends Label
+
+func _ready():
+	global.connect(\"new_challenge\", self, \"_update_title\")
+
+func _update_title(s):
+	set_text(s)
+"
 
 [sub_resource type="GDScript" id=2]
 
@@ -120,9 +131,11 @@ align = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+script/script = SubResource( 5 )
 
 [node name="upper_buttons" type="Container" parent="hud"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -176,7 +189,6 @@ texture = ExtResource( 11 )
 
 [node name="scoring" type="Container" parent="hud"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2

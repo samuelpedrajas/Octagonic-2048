@@ -12,6 +12,7 @@ var next_challenge_index
 signal current_score_changed
 signal current_max_changed
 signal current_goal_changed
+signal new_challenge
 
 func _ready():
 	stage = get_tree().get_root().get_node("stage")
@@ -22,7 +23,8 @@ func _next_challenge():
 	current_challenge = config.CHALLENGES[next_challenge_index]
 	self.current_goal = current_challenge.goal
 	next_challenge_index += 1
-	stage.prepare_board(current_challenge)	
+	stage.prepare_board(current_challenge)
+	emit_signal("new_challenge", current_challenge.name)
 
 func _check_win():
 	if max_current == current_goal:
