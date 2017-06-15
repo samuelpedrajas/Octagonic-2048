@@ -1,18 +1,19 @@
-[gd_scene load_steps=19 format=1]
+[gd_scene load_steps=20 format=1]
 
 [ext_resource path="res://scripts/stage.gd" type="Script" id=1]
 [ext_resource path="res://audio/merge.smp" type="Sample" id=2]
 [ext_resource path="res://images/background.tex" type="Texture" id=3]
-[ext_resource path="res://fonts/title.fnt" type="BitmapFont" id=4]
-[ext_resource path="res://images/leaderboard.tex" type="Texture" id=5]
-[ext_resource path="res://images/audio_on.tex" type="Texture" id=6]
-[ext_resource path="res://images/settings.tex" type="Texture" id=7]
+[ext_resource path="res://images/top_border.tex" type="Texture" id=4]
+[ext_resource path="res://fonts/title.fnt" type="BitmapFont" id=5]
+[ext_resource path="res://images/audio.tex" type="Texture" id=6]
+[ext_resource path="res://images/menu.tex" type="Texture" id=7]
 [ext_resource path="res://images/restart.tex" type="Texture" id=8]
 [ext_resource path="res://images/undo.tex" type="Texture" id=9]
 [ext_resource path="res://images/brush.tex" type="Texture" id=10]
-[ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=11]
-[ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=12]
-[ext_resource path="res://scripts/input_handler.gd" type="Script" id=13]
+[ext_resource path="res://images/bottom_border.tex" type="Texture" id=11]
+[ext_resource path="res://fonts/score_label.fnt" type="BitmapFont" id=12]
+[ext_resource path="res://fonts/hud_labels.fnt" type="BitmapFont" id=13]
+[ext_resource path="res://scripts/input_handler.gd" type="Script" id=14]
 
 [sub_resource type="SampleLibrary" id=1]
 
@@ -113,28 +114,46 @@ offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
-[node name="title" type="Label" parent="hud"]
+[node name="header" type="Container" parent="hud"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1080.0
+margin/bottom = 225.0
+
+[node name="top_border" type="Sprite" parent="hud/header"]
+
+z/z = -1
+texture = ExtResource( 4 )
+centered = false
+
+[node name="title" type="Label" parent="hud/header"]
 
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
-margin/top = 200.0
+margin/top = 150.0
 margin/right = 1080.0
-margin/bottom = 293.0
-custom_fonts/font = ExtResource( 4 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "Challenge 0"
+margin/bottom = 288.0
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 5
+custom_constants/shadow_offset_y = 10
+text = "1/10"
 align = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 script/script = SubResource( 2 )
 
-[node name="upper_buttons" type="Container" parent="hud"]
+[node name="upper_buttons" type="Container" parent="hud/header"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -144,24 +163,42 @@ margin/top = 30.0
 margin/right = 1080.0
 margin/bottom = 158.0
 
-[node name="leaderboard" type="Sprite" parent="hud/upper_buttons"]
+[node name="sound" type="TextureButton" parent="hud/header/upper_buttons"]
 
-transform/pos = Vector2( 100, 64 )
-texture = ExtResource( 5 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 690.0
+margin/top = 0.0
+margin/right = 860.0
+margin/bottom = 170.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 6 )
+params/resize_mode = 0
+params/stretch_mode = 0
 
-[node name="sound" type="Sprite" parent="hud/upper_buttons"]
+[node name="menu" type="TextureButton" parent="hud/header/upper_buttons"]
 
-transform/pos = Vector2( 802, 64 )
-texture = ExtResource( 6 )
-
-[node name="settings" type="Sprite" parent="hud/upper_buttons"]
-
-transform/pos = Vector2( 980, 64 )
-texture = ExtResource( 7 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 890.0
+margin/top = 0.0
+margin/right = 1060.0
+margin/bottom = 170.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 7 )
+params/resize_mode = 0
+params/stretch_mode = 0
 
 [node name="lower_buttons" type="Container" parent="hud"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -169,22 +206,65 @@ size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 1550.0
 margin/right = 1080.0
-margin/bottom = 1678.0
+margin/bottom = 1720.0
 
-[node name="restart" type="Sprite" parent="hud/lower_buttons"]
+[node name="restart" type="TextureButton" parent="hud/lower_buttons"]
 
-transform/pos = Vector2( 292, 64 )
-texture = ExtResource( 8 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 200.0
+margin/top = 0.0
+margin/right = 370.0
+margin/bottom = 170.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 8 )
+params/resize_mode = 0
+params/stretch_mode = 0
 
-[node name="undo" type="Sprite" parent="hud/lower_buttons"]
+[node name="undo" type="TextureButton" parent="hud/lower_buttons"]
 
-transform/pos = Vector2( 540, 64 )
-texture = ExtResource( 9 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 455.0
+margin/top = 0.0
+margin/right = 625.0
+margin/bottom = 170.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 9 )
+params/resize_mode = 0
+params/stretch_mode = 0
 
-[node name="brush" type="Sprite" parent="hud/lower_buttons"]
+[node name="brush" type="TextureButton" parent="hud/lower_buttons"]
 
-transform/pos = Vector2( 808, 64 )
-texture = ExtResource( 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 710.0
+margin/top = 0.0
+margin/right = 880.0
+margin/bottom = 170.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 10 )
+params/resize_mode = 0
+params/stretch_mode = 0
+
+[node name="Sprite" type="Sprite" parent="hud/lower_buttons"]
+
+transform/pos = Vector2( 0, 90 )
+z/z = -1
+texture = ExtResource( 11 )
+centered = false
 
 [node name="scoring" type="Container" parent="hud"]
 
@@ -193,9 +273,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 0.0
-margin/right = 40.0
-margin/bottom = 40.0
+margin/top = 300.0
+margin/right = 1080.0
+margin/bottom = 700.0
 
 [node name="score_current" type="Label" parent="hud/scoring"]
 
@@ -209,10 +289,10 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 20.0
-margin/top = -330.0
+margin/top = -130.0
 margin/right = -520.0
-margin/bottom = -568.0
-custom_fonts/font = ExtResource( 11 )
+margin/bottom = -368.0
+custom_fonts/font = ExtResource( 12 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
 align = 1
@@ -230,9 +310,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 70.0
-margin/top = 380.0
+margin/top = 180.0
 margin/right = 520.0
-margin/bottom = 530.0
+margin/bottom = 330.0
 color = Color( 0.494118, 0.494118, 0.494118, 0.5 )
 
 [node name="goal_label" type="Label" parent="hud/scoring/goal_frame"]
@@ -245,7 +325,7 @@ margin/left = 0.0
 margin/top = -60.0
 margin/right = 450.0
 margin/bottom = -16.0
-custom_fonts/font = ExtResource( 12 )
+custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Goal"
 align = 1
@@ -267,7 +347,7 @@ margin/left = 225.0
 margin/top = 75.0
 margin/right = -225.0
 margin/bottom = -75.0
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 5 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "0"
 align = 1
@@ -284,9 +364,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 560.0
-margin/top = 380.0
+margin/top = 180.0
 margin/right = 1010.0
-margin/bottom = 530.0
+margin/bottom = 330.0
 color = Color( 0.494118, 0.494118, 0.494118, 0.5 )
 
 [node name="max_current_label" type="Label" parent="hud/scoring/max_current_frame"]
@@ -299,7 +379,7 @@ margin/left = 0.0
 margin/top = -60.0
 margin/right = 450.0
 margin/bottom = -16.0
-custom_fonts/font = ExtResource( 12 )
+custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Current Max"
 align = 1
@@ -321,7 +401,7 @@ margin/left = 225.0
 margin/top = 75.0
 margin/right = -225.0
 margin/bottom = -75.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 12 )
 custom_colors/font_color = Color( 0.390625, 0, 0, 1 )
 text = "0"
 align = 1
@@ -341,7 +421,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 1080.0
 margin/bottom = 1920.0
-script/script = ExtResource( 13 )
+script/script = ExtResource( 14 )
 
 [node name="tween" type="Tween" parent="."]
 
