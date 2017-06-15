@@ -17,7 +17,7 @@ func _set_label():
 
 	if n_digits_new != n_digits_old:
 		label.set_scale(label.get_scale() * config.LABEL_SCALE)
-		label.set_pos(-label.get_size() * label.get_scale() / 2 + config.LABEL_OFFSET)
+		label.set_pos(-label.get_size() * label.get_scale() / 2)
 	label.text = str(value)
 
 func _spawn_animation():
